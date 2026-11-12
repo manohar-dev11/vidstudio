@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String   @default("General")
+  status      String   @default("UPLOADING") // UPLOADING, PROCESSING, READY, FAILED
+  storageKey  String?  // file path in R2
+  playbackId  String?  // used later for streaming
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
